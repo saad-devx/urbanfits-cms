@@ -1,0 +1,548 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Futura LT Pro';
+  font-weight: normal;
+  font-display: swap;
+  src: url('https://urban-fits.s3.ap-south-1.amazonaws.com/fonts/FuturaLTPro-Book.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Futura LT Pro Light';
+  font-weight: normal;
+  font-display: swap;
+  src: url('https://urban-fits.s3.ap-south-1.amazonaws.com/fonts/FuturaLTPro-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Futura LT Pro Bold';
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://urban-fits.s3.ap-south-1.amazonaws.com/fonts/FuturaLT-Bold.woff') format('woff');
+}
+
+.font_futura {
+  font-family: 'Futura LT Pro';
+}
+
+.font_futura_light {
+  font-family: 'Futura LT Pro Light';
+}
+
+.font_futura_bold {
+  font-family: 'Futura LT Pro Bold';
+}
+
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  tap-highlight-color: rgba(0, 0, 0, 0);
+  /* color: #383838; */
+  scroll-behavior: smooth;
+}
+
+*::selection {
+  background-color: rgb(216, 213, 49);
+  color: #ffff;
+}
+
+select {
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #invoice,
+  #invoice * {
+    visibility: visible;
+  }
+
+  #invoice {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+.bg_metal_gold {
+  /* background for second home carousel */
+  background: linear-gradient(-270deg, rgba(107, 107, 107, 0.2) 0.02%, rgba(179, 144, 62, 0.25) 55.35%);
+}
+
+.bg_btn_gold {
+  background: linear-gradient(92.79deg, #FAE892 0.08%, #B3903E 100.08%);
+}
+
+.bg_btn_gold_2 {
+  background: linear-gradient(180deg, #FAE892 0%, #B3903E 100%);
+}
+
+.bg_404 {
+  background-image: url("https://urban-fits.s3.ap-south-1.amazonaws.com/website-copyrights/404+Page.webp");
+}
+
+.gradient_background {
+  background: linear-gradient(90deg, #FAE892 0.1%, #B3903E 100.1%);
+}
+
+.gradient_txt {
+  font-style: normal;
+  line-height: 50px;
+  background: linear-gradient(90deg, #FAE892 0.1%, #B3903E 100.1%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.gradient_txt_2 {
+  background: linear-gradient(90deg, #FAE892 0.1%, #B3903E 100.1%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.data_field:has(input:focus) {
+  border-color: rgb(161 98 7);
+}
+
+.marginx_auto {
+  margin: auto;
+}
+
+.card_boxshadow {
+  box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.25);
+
+}
+
+.equillibrium_shadow {
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+}
+
+/*                                    Google icons setup */
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48
+}
+
+.i_size {
+  font-variation-settings:
+    'opsz' 40
+}
+
+.fill {
+  font-variation-settings:
+    'FILL' 1
+}
+
+/* Checkbox CSS here */
+input[type="checkbox"] {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  color: #FAE892;
+  border: 1px solid #bdc1c6;
+  border-radius: 4px;
+  appearance: none;
+  outline: 0;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.1, 0.1, 0.25, 1);
+}
+
+input[type="checkbox"]::before {
+  position: absolute;
+  content: '';
+  display: block;
+  top: 2px;
+  left: 5px;
+  width: 5px;
+  height: 9px;
+  border-style: solid;
+  border-color: #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.1, 0.1, 0.25, 1);
+}
+
+input[type="checkbox"]:checked {
+  color: #fff;
+  background: linear-gradient(92.79deg, #FAE892 0.08%, #B3903E 100.08%);
+}
+
+input[type="checkbox"]:checked::before {
+  opacity: 1;
+}
+
+input[type="checkbox"]:checked {
+  border: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Custom Radio CSS here */
+input[type="radio"] {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  color: #FAE892;
+  border: 1px solid #bdc1c6;
+  appearance: none;
+  outline: 0;
+  cursor: pointer;
+  transition: background 175ms cubic-bezier(0.1, 0.1, 0.25, 1);
+}
+
+input[type="checkbox"]::before {
+  position: absolute;
+  content: '';
+  display: block;
+  top: 2px;
+  left: 5px;
+  width: 5px;
+  height: 9px;
+  border-style: solid;
+  border-color: #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+input[type="radio"]:checked {
+  color: #fff;
+  background: linear-gradient(92.79deg, #FAE892 0.08%, #B3903E 100.08%);
+}
+
+input[type="radio"]:checked::before {
+  opacity: 1;
+}
+
+input[type="radio"]:checked {
+  border: none;
+}
+
+
+/* gradient border css here */
+.border_gradient span {
+  background: linear-gradient(180deg, #FAE892 0%, #B3903E 100%);
+  transition: all .3s;
+  opacity: 0;
+}
+
+.border_gradient:hover span {
+  opacity: 1;
+}
+
+/* Toggle button css */
+.switch {
+  position: relative;
+  display: inline-block;
+  /* width: 46px;
+    height: 25px; */
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: -3px;
+  left: 0;
+  right: 0;
+  bottom: 1px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked+.slider {
+  background: linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+}
+
+input:checked+.slider:before {
+
+  -webkit-transform: translate(-100%, -50%);
+  -ms-transform: translate(-100%, -50%);
+  transform: translate(-100%, -50%);
+  left: 90%;
+
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* hiding element when out of focus */
+.group:not(:focus) .minus_icon {
+  display: none;
+}
+
+/* Toast css */
+.toast {
+  font-family: 'Futura LT Pro' !important;
+}
+
+@media only screen and (max-width: 600px) {
+  .toast {
+    top: 10px !important;
+    left: 10px !important;
+    width: 65% !important;
+    height: 100px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* custom scroll bar */
+::-webkit-scrollbar {
+  width: 5px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  width: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  position: absolute;
+  background: linear-gradient(180deg, #FAE892 0%, #B3903E 100%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar {
+  visibility: hidden;
+}
+
+.mini_scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+
+/*                                     CSS to hide scroll bar */
+
+.hide_scrollbar::-webkit-scrollbar {
+  display: none;
+  -ms-overflow-style: none;
+  scrollbar-width: 0;
+  width: 0;
+  height: 0;
+}
+
+.scrollbar_x::-webkit-scrollbar {
+  height: 5px;
+}
+
+.scrollbar_x::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+}
+
+/* Admin Area Start  */
+
+#input_text_2 {
+  width: auto !important;
+  width: 300% !important;
+}
+
+/* CSS for rough gold background */
+.bronze_metal_bg {
+  background: radial-gradient(97.84% 92.24% at 0% -8.66%, #b08d57 0%, rgba(176, 141, 87, 0.00) 100%), linear-gradient(74deg, #8B5A2B 13.43%, #b08d57 26.76%, #b08d57 47.44%, #8B5A2B 53.73%, #8B5A2B 77.78%, #b08d57 86.51%, #8B5A2B 95.7%);
+  background-blend-mode: overlay, normal;
+}
+
+.silver_metal_bg {
+  background: radial-gradient(97.84% 92.24% at 0% -8.66%, #E5E4E2 0%, rgba(229, 228, 226, 0.00) 100%), linear-gradient(74deg, #CDCBC6 13.43%, #E5E4E2 26.76%, #E5E4E2 47.44%, #CDCBC6 53.73%, #CDCBC6 77.78%, #E5E4E2 86.51%, #CDCBC6 95.7%);
+  background-blend-mode: overlay, normal;
+}
+
+.gold_metal_bg {
+  background: radial-gradient(97.84% 92.24% at 0% -8.66%, #FAE892 0%, rgba(250, 232, 146, 0.00) 100%), linear-gradient(74deg, #B3903E 13.43%, #FAE892 26.76%, #FAE892 47.44%, #B3903E 53.73%, #B3903E 77.78%, #FAE892 86.51%, #B3903E 95.7%);
+  background-blend-mode: overlay, normal;
+}
+
+.platinum_metal_bg {
+  background: radial-gradient(97.84% 92.24% at 0% -8.66%, #FFF 0%, rgba(255, 255, 255, 0.00) 100%), linear-gradient(74deg, #576265 13.43%, #9EA1A1 26.76%, #848B8A 47.44%, #576265 53.73%, #576265 77.78%, #757A7B 86.51%, #576265 95.7%);
+  background-blend-mode: overlay, normal;
+}
+
+.saphire_metal_bg {
+  background: radial-gradient(97.84% 92.24% at 0% -8.66%, #082E67 0%, rgba(8, 46, 103, 0.00) 100%), linear-gradient(74deg, #0E54A0 13.43%, #082E67 26.76%, #082E67 47.44%, #0E54A0 53.73%, #0E54A0 77.78%, #082E67 86.51%, #0E54A0 95.7%);
+  background-blend-mode: overlay, normal;
+}
+
+.diamond_metal_bg {
+  background: radial-gradient(97.84% 92.24% at 0% -8.66%, #000000 0%, rgba(0, 0, 0, 0.00) 100%), linear-gradient(74deg, #8A2BE2 13.43%, #000000 26.76%, #000000 47.44%, #8A2BE2 53.73%, #8A2BE2 77.78%, #000000 86.51%, #8A2BE2 95.7%);
+  background-blend-mode: overlay, normal;
+}
+
+/* Range Slider custom style */
+
+/* input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 15rem;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+  height: 0.5rem;
+  border-radius: 10px;
+}
+
+input[type="range"]::-moz-range-track {
+  background: linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+  height: 0.5rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.2rem;
+  width: 1.2rem;
+  margin-top: -12px;
+  border-radius: 25px;
+  background-color: #FFFF;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 1.2rem;
+  width: 1.2rem;
+  border: none;
+  border-radius: 25px;
+  background-color: #FFFF;
+} */
+
+input[type=range] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 200px;
+  background-color: transparent;
+}
+
+input[type=range]:focus {
+  outline-color: rgb(255, 202, 104);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: -webkit-linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+  background: linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+}
+
+input[type=range]::-moz-range-track {
+  -moz-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: -moz-linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+  background: linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+}
+
+input[type=range]::-ms-track {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: -moz-linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+  background: -webkit-linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+  background: linear-gradient(90deg, #FAE892 0%, #B3903E 100%);
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid rgb(255, 202, 104);
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  position: relative;
+  bottom: 8px;
+  background: #FFFF;
+  background-size: 50%;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb:active {
+  cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  border: 2px solid rgb(255, 202, 104);
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  position: relative;
+  bottom: 8px;
+  background: #FFFF;
+  background-size: 50%;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+body input[type=range]::-moz-range-thumb:active {
+  cursor: pointer;
+}
+
+body input[type=range]::-ms-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 2px solid #f8b195;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  position: relative;
+  bottom: 8px;
+  background: #FFFF;
+  background-size: 50%;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+body input[type=range]::-ms-thumb:active {
+  cursor: pointer;
+}
