@@ -10,18 +10,19 @@ import { useRouter } from 'next/router'
 import Error404 from '../404'
 
 export default function Login() {
-    const { isLoggedIn, adminLoading } = useSession()
+    const { isLoggedIn, adminLoading, admin, updateAdmin } = useSession()
     const router = useRouter()
     const [totp, setTotp] = useState('')
 
     const onVerifyClick = async (user_id) => {
-        if (!isLoggedIn()) return toaster("info", "You are already singned in")
         if (!user_id || user_id.length < 18) return toaster("error", "Something went wrong, please try login again.")
         useSession.setState({ adminLoading: true });
         try {
-            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/2fa/verify-totp?user_id=${user_id}&totp_code=${totp}`)
-            await updateUser(data.payload, true)
-            useSession.setState({ guestUser: null });
+            // the session cookies are set by this response, so they have to be accepted here
+            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/2fa/verify-totp?user_id=${user_id}&totp_code=${totp}`, { withCredentials: true })
+            const signedIn = await updateAdmin(data.user, true)
+            if (!signedIn) return
+            useSession.setState({ sessionChecked: true });
             router.replace('/')
             toaster("success", data.msg)
         } catch (error) {
@@ -31,7 +32,7 @@ export default function Login() {
     }
 
     if (!router.query.user_id || router.query.user_id.length < 18) return <Error404 />
-    if (isLoggedIn()) return <AlertPage type="success" heading="You are already signed in !" />
+    if (isLoggedIn() && admin) return <AlertPage type="success" heading="You are already signed in !" />
     else return <>
         <Head><title>Urban Fits - Confirm 2FA TOTP code</title></Head>
         <AuthPage loading={adminLoading} mblNav="/auth/signup" mblNavName="Register">

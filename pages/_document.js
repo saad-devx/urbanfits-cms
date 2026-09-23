@@ -12,7 +12,7 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
-        <script src="https://kit.fontawesome.com/4e881d944d.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/4e881d944d.js" crossOrigin="anonymous"></script>
       </body>
     </Html>
   )

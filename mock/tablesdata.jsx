@@ -850,13 +850,16 @@ export const productCategoriesTableColumns = [
     width: "22%"
   },
   {
-    selector: row => row.name.en,
+    selector: row => row.name?.en,
     name: <span className="select-none text-[15px]">Name</span>,
+    cell: (row) => <span style={{ paddingLeft: `${row.depth * 0.9}rem` }} className="w-full whitespace-nowrap truncate cursor-default">
+      {row.depth ? <span className="text-gray-400">&#8735;&nbsp;</span> : null}{row.name?.en}
+    </span>,
     sortable: true,
     width: "16%"
   },
   {
-    selector: row => row.description.en,
+    selector: row => row.description?.en,
     name: <span className="select-none text-[15px]" >Description</span>,
     sortable: true,
     width: "31%"

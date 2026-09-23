@@ -9,6 +9,7 @@ import Loader from '@/components/loaders/loader';
 // imports for Schema and validation
 import { useFormik } from 'formik';
 import { homeCarouselSchema } from '@/mock/yupSchemas';
+import toaster from '@/utils/toast_function';
 
 const DefaultOrPic = ({ src, index, setFieldValue }) => {
     const imgSrc = (() => {
@@ -28,9 +29,11 @@ const DefaultOrPic = ({ src, index, setFieldValue }) => {
     </label>
 }
 
+// the stored slides carry _id and timestamps which must not be sent back on an update
+const toFormSlides = (carousel) => carousel.slides.map(({ title, image, href }) => ({ title, image, href: href || '' }))
+
 export default function ProductCategories() {
     const [loader, setLoader] = useState(null);
-    const [carousel, setCarousel] = useState('');
     const { getHomeCarousel, updateHomeCarousel } = useCarousel();
 
     const { values, errors, handleBlur, handleChange, handleSubmit, handleReset, touched, setFieldValue, setValues } = useFormik({
@@ -44,20 +47,19 @@ export default function ProductCategories() {
                 }
             ]
         },
-        onSubmit: async (values, { resetForm }) => {
+        onSubmit: async (values) => {
             setLoader(<Loader status="Preparing the uploading for the slide images..." progress={8} />)
-            const slides = structuredClone(values.slides);
+            const slides = values.slides.map(({ title, image, href }) => ({ title, image, href }));
             for (let [index, slide] of slides.entries()) {
-                setLoader(<Loader status={`Uploading Slide Image #${index}...`} progress={index / slides.length * 100} />)
+                // an untouched slide already holds its stored path, only a newly picked file is uploaded
+                if (typeof slide.image === "string") continue
+                setLoader(<Loader status={`Uploading Slide Image #${index + 1}...`} progress={index / slides.length * 100} />)
                 slide.image = await uploadImage(slide.image, `carousel-images/home/${Date.now()}`, 100);
-                console.log(slide)
+                if (!slide.image) { setLoader(null); return toaster("error", `Slide #${index + 1} image couldn't be uploaded, please retry.`) }
             }
 
             setLoader(<Loader status="All slides images uploaded, updating carousel now.." progress={99} />)
-            await updateHomeCarousel(slides, (carousel) => {
-                console.log("Updated carousel: ", carousel)
-                resetForm();
-            })
+            await updateHomeCarousel(slides, (carousel) => setValues({ slides: toFormSlides(carousel) }))
             setLoader(null)
         },
     })
@@ -75,9 +77,10 @@ export default function ProductCategories() {
     };
 
     useEffect(() => {
-        getHomeCarousel((carouselData) => setCarousel(carouselData));
+        getHomeCarousel((carouselData) => {
+            if (carouselData?.slides?.length) setValues({ slides: toFormSlides(carouselData) })
+        });
     }, [])
-    // console.log("the carousel data here: ", carousel);
 
     return <>
         {loader}

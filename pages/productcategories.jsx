@@ -24,7 +24,7 @@ export default function ProductCategories() {
     const filteredCategories = categories.filter((item) => {
         if (query !== '') {
             const { _id, name } = item
-            return name.toLowerCase().includes(query.toLowerCase()) || _id.includes(query)
+            return name?.en?.toLowerCase().includes(query.toLowerCase()) || name?.ar?.includes(query) || _id.includes(query)
         }
         else return true
     });
@@ -49,24 +49,32 @@ export default function ProductCategories() {
 
     const validatedSchema = Yup.object({
         id: Yup.string().min(18).max(30).nullable(),
-        name: Yup.string().max(35, "Category name should not exceed 35 chars").required("Please enter a category name."),
+        name: Yup.object({
+            en: Yup.string().max(35, "Category name should not exceed 35 chars").required("Please enter a category name."),
+            ar: Yup.string().max(35, "Category name should not exceed 35 chars").required("Please enter an Arabic category name.")
+        }),
         slug: Yup.string().required("Slug is mandatory").matches(/^\S*$/, "Slug should have a '/' and sholdn't contain spaces."),
         parent: Yup.string().nullable(),
-        description: Yup.string().max(300, 'description can be a maximum of 300 characters.')
+        description: Yup.object({
+            en: Yup.string().max(300, 'description can be a maximum of 300 characters.'),
+            ar: Yup.string().max(300, 'description can be a maximum of 300 characters.')
+        })
     })
 
     const { values, touched, handleBlur, handleChange, handleSubmit, handleReset, errors, setFieldValue, setValues } = useFormik({
-        initialValues: { id: null, name: '', slug: '', parent: null, description: '' },
+        initialValues: { id: null, name: { en: '', ar: '' }, slug: '', parent: null, description: { en: '', ar: '' } },
         validationSchema: validatedSchema,
         onSubmit: (values) => {
             const { id } = values;
-            console.log(values)
-            if (id) updateCategory(values)
+            if (id) updateCategory({ ...values, _id: id })
             if (!id) createCategory(values)
             handleReset()
             return setFieldValue('parent', null)
         }
     })
+
+    // a category can never become a child of itself or of one of its own descendants
+    const parentOptions = categories.filter(cat => !values.id || (cat._id !== values.id && !(values.path && cat.path?.startsWith(values.path))))
 
     useEffect(() => {
         if (categories.length < 1) getCategories()
@@ -147,13 +155,11 @@ export default function ProductCategories() {
                     <InputSelect
                         label="Parent"
                         name="parent"
-                        defaultValue="Select Parent"
+                        value={values.parent || ''}
                         onChange={handleChange}
                         onBlur={handleBlur}>
-                        {[{ id: null, path: "Select Parent" }, ...categories?.map((cat) => ({ id: cat._id, path: cat.path }))]?.map((obj, index) => {
-                            const { id, path } = obj
-                            return <option key={index} value={id} selected={values.parent == id} disabled={index == 0}> {path} </option>
-                        })}
+                        <option value=''> No Parent (root category) </option>
+                        {parentOptions.map((cat) => <option key={cat._id} value={cat._id}> {cat.path} </option>)}
                     </InputSelect>
                     <div className="relative w-full data_field items-center">
                         <h2 className="mb-2 font_futura text-sm text-left">Description (English)</h2>
@@ -163,7 +169,7 @@ export default function ProductCategories() {
                     <div className="relative w-full data_field items-center">
                         <h2 className="mb-2 font_futura text-sm text-left">Description (Arabic)</h2>
                         {touched?.description?.ar && errors?.description?.ar ? <Tooltip classes="form-error" content={errors.description.ar} /> : null}
-                        <textarea rows={3} className="w-full p-2 bg-transparent outline-none border rounded-md border-gray-300 focus:border-yellow-700 hover:border-yellow-600 transition" type="text" value={values?.description?.ar} name="description.en" id="description.en" maxLength={1000} onBlur={handleBlur} onChange={handleChange} placeholder="" />
+                        <textarea rows={3} className="w-full p-2 bg-transparent outline-none border rounded-md border-gray-300 focus:border-yellow-700 hover:border-yellow-600 transition" type="text" value={values?.description?.ar} name="description.ar" id="description.ar" maxLength={1000} onBlur={handleBlur} onChange={handleChange} placeholder="" />
                     </div>
                     <div className="full flex flex-col gap-y-2">
                         <Button disabled={categLoading} type="reset" bg="bg-gray-100" text="black" classes="w-full" font='font_futura' my="my-0" >Clear</Button>
@@ -198,11 +204,18 @@ export default function ProductCategories() {
                                 name: cat.name,
                                 description: cat.description,
                                 slug: cat.slug,
+                                // the API returns the categories ordered by path, so the number of
+                                // segments in a path is the row's depth in the tree
+                                depth: (cat.path?.split('/').filter(Boolean).length || 1) - 1,
                                 order: (index + 1),
                                 actions: [
                                     {
                                         onClick: () => {
-                                            return setValues({ ...cat, id: cat._id, parent: cat.parent ? cat.parent._id : null })
+                                            return setValues({
+                                                ...cat, id: cat._id,
+                                                parent: cat.parent ? cat.parent._id : null,
+                                                description: cat.description || { en: '', ar: '' }
+                                            })
                                         }, name: "Edit"
                                     },
                                     { onClick: () => { navigator.clipboard.writeText(cat._id) }, name: "Copy ID" },

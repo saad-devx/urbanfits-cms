@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 import axios from "axios";
 import toaster from "@/utils/toast_function";
 import useSession from "./useSession";
-const { admin } = useSession.getState()
 
 export default function useAddress() {
 
@@ -14,6 +13,7 @@ export default function useAddress() {
     }
     const [address, setAddress] = useState(getAddressFromLS)
     const getAddress = async () => {
+        const { admin } = useSession.getState()
         if (!admin) return
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/user/addresses/get?user_id=${admin._id}`)
@@ -30,6 +30,8 @@ export default function useAddress() {
     }
 
     const updateAddress = async (values) => {
+        const { admin } = useSession.getState()
+        if (!admin) return
         try {
             let { data } = await axios.put(`${process.env.NEXT_PUBLIC_HOST}/api/user/addresses/update?user_id=${admin._id}`, values)
             if (!data.addresses) return toaster("error", "Some error occurred")

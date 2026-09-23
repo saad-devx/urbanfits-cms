@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import toaster from "@/utils/toast_function";
 import axios from 'axios';
 import useSession from "./useSession";
-const { admin } = useSession.getState()
 
 const useUser = create((set, get) => ({
     users: [],
@@ -13,6 +12,7 @@ const useUser = create((set, get) => ({
     setSelectedUsers: (newArray) => set(() => ({ selectedUsers: newArray })),
 
     getUsers: async (page = 1) => {
+        const { admin } = useSession.getState()
         if (!admin) return
         set(() => ({ usersLoading: true }))
         try {
@@ -30,6 +30,7 @@ const useUser = create((set, get) => ({
     },
 
     getUser: async (user_id, router) => {
+        const { admin } = useSession.getState()
         if (!admin || !user_id) return
         set(() => ({ usersLoading: true }))
         try {
@@ -43,6 +44,7 @@ const useUser = create((set, get) => ({
     },
 
     getAllUsersTasks: async (page = 1, callback) => {
+        const { admin } = useSession.getState()
         if (!admin) return
         set(() => ({ usersLoading: true }))
         try {
@@ -55,6 +57,7 @@ const useUser = create((set, get) => ({
     },
 
     getUserTasks: async (user_id, router, callback) => {
+        const { admin } = useSession.getState()
         if (!admin || !user_id) return
         try {
             const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/tasks/get/user-tasks-via-admin?user_id=${user_id}`, { withCredentials: true })
@@ -67,6 +70,7 @@ const useUser = create((set, get) => ({
     },
 
     approveTask: async (taskData, callback) => {
+        const { admin } = useSession.getState()
         if (!admin) return
         set(() => ({ usersLoading: true }))
         try {
@@ -82,6 +86,7 @@ const useUser = create((set, get) => ({
     },
 
     getTotalOnlineUsers: async () => {
+        const { admin } = useSession.getState()
         if (!admin) return
         set(() => ({ usersLoading: true }))
         try {
@@ -127,6 +132,7 @@ const useUser = create((set, get) => ({
     },
 
     updateUser: async (user_id, valuesObj, callback) => {
+        const { admin } = useSession.getState()
         if (!admin) return
         set(() => ({ usersLoading: true }))
         try {
@@ -141,6 +147,7 @@ const useUser = create((set, get) => ({
     },
 
     resetUser2fa: async (user_id) => {
+        const { admin } = useSession.getState()
         if (!admin) return
         set(() => ({ usersLoading: true }))
         try {
@@ -156,6 +163,7 @@ const useUser = create((set, get) => ({
     },
 
     deleteUsers: async (usersToDelete) => {
+        const { admin } = useSession.getState()
         if (!admin) return
 
         set(() => ({ usersLoading: true }))

@@ -123,12 +123,17 @@ export const couponSchema = Yup.object({
     expiration_date: Yup.date(),
 });
 
+// a slide may link to an external site or to a page of the storefront itself
+const slideHref = Yup.string().test('href', 'Enter a full URL or a site path starting with "/"', (value) =>
+    !value || value.startsWith('/') || Yup.string().url().isValidSync(value)
+)
+
 export const homeCarouselSchema = Yup.object({
     slides: Yup.array().of(
         Yup.object().shape({
             title: Yup.string().required("Title is required."),
             image: Yup.mixed().required("Image is required."),
-            href: Yup.string().url()
+            href: slideHref
         })
     )
 })
@@ -139,7 +144,7 @@ export const catalogueCarouselSchema = Yup.object({
             title: Yup.string().required("Title is required."),
             image1: Yup.mixed().required("Image1 is required."),
             image2: Yup.mixed().required("Image2 is required."),
-            href: Yup.string().url()
+            href: slideHref
         })
     )
 })

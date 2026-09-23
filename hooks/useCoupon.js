@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import toaster from "@/utils/toast_function";
 import axios from "axios";
 import useSession from "./useSession";
-const { admin } = useSession.getState()
 
 const useCoupon = create((set, get) => ({
 
@@ -11,6 +10,7 @@ const useCoupon = create((set, get) => ({
     setSelectedCoupons: (newArray) => set(() => ({ selectedCoupons: newArray })),
 
     getCoupons: async (callback) => {
+        const { admin } = useSession.getState()
         if (!admin) return
         set(() => ({ couponLoading: true }))
         try {
@@ -40,6 +40,7 @@ const useCoupon = create((set, get) => ({
     },
 
     createCoupon: async (couponToCreate, callback) => {
+        const { admin } = useSession.getState()
         if (!admin) return
 
         set(() => ({ couponLoading: true }))

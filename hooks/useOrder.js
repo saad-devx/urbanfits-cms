@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import toaster from "@/utils/toast_function";
 import axios from "axios";
 import useSession from "./useSession";
-const { admin } = useSession.getState()
 
 const useOrder = create((set, get) => ({
 
@@ -61,6 +60,7 @@ const useOrder = create((set, get) => ({
     },
 
     createOrder: async (orderToCreate) => {
+        const { admin } = useSession.getState()
         if (!admin) return
 
         set(() => ({ orderLoading: true }))
@@ -76,6 +76,7 @@ const useOrder = create((set, get) => ({
     },
 
     updateOrder: async (id, updatedorder) => {
+        const { admin } = useSession.getState()
         if (!admin) return
         set(() => ({ orderLoading: true }))
         try {
@@ -94,6 +95,7 @@ const useOrder = create((set, get) => ({
     },
 
     deleteOrders: async (orderIds) => {
+        const { admin } = useSession.getState()
         if (!admin) return
 
         set(() => ({ orderLoading: true }))

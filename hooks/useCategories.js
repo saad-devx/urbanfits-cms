@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import toaster from "@/utils/toast_function";
 import axios from "axios";
 import useSession from "./useSession";
-const { admin } = useSession.getState()
 
 const useCategories = create((set, get) => ({
 
@@ -10,6 +9,7 @@ const useCategories = create((set, get) => ({
     categLoading: false,
 
     getCategories: async () => {
+        const { admin } = useSession.getState()
         if (!admin?._id) return console.log("no admin data")
 
         set(() => ({ categLoading: true }))
@@ -26,6 +26,7 @@ const useCategories = create((set, get) => ({
     },
 
     getOneCategory: async (category_id, callback) => {
+        const { admin } = useSession.getState()
         if (!admin) return
 
         set(() => ({ categLoading: true }))
@@ -40,6 +41,7 @@ const useCategories = create((set, get) => ({
     },
 
     createCategory: async (category) => {
+        const { admin } = useSession.getState()
         if (!admin || admin.role === "customer") return
 
         set(() => ({
@@ -59,6 +61,7 @@ const useCategories = create((set, get) => ({
     },
 
     updateCategory: async (update) => {
+        const { admin } = useSession.getState()
         if (!admin || admin.role === "customer") return
 
         set(() => ({
@@ -76,6 +79,7 @@ const useCategories = create((set, get) => ({
     },
 
     deleteCategories: async (categoriesToDelete) => {
+        const { admin } = useSession.getState()
         if (!admin || admin.role === "customer") return
 
         set(() => ({ categLoading: true }))

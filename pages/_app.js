@@ -11,7 +11,7 @@ import { initBeamsClient } from "@/utils/pusher";
 function App({ Component, pageProps }) {
   const router = useRouter()
   const [progress, setProgress] = useState(0)
-  const { admin, getMe, emitPresenceEvent, subscribeAdminChannel, isLoggedIn } = useSession();
+  const { admin, sessionChecked, getMe, emitPresenceEvent, subscribeAdminChannel, isLoggedIn } = useSession();
 
   useEffect(() => {
     getMe();
@@ -20,18 +20,19 @@ function App({ Component, pageProps }) {
   useEffect(() => {
     let unSubPresence = null;
     let unSubAdminChannel = null;
+    if (!sessionChecked) return
     if (isLoggedIn() && admin) {
       initBeamsClient()
       unSubPresence = emitPresenceEvent();
       unSubAdminChannel = subscribeAdminChannel();
 
-    } else if (!isLoggedIn()) router.replace("/auth/login")
+    } else router.replace("/auth/login")
 
     return () => {
       if (unSubPresence) unSubPresence();
       if (unSubAdminChannel) unSubAdminChannel();
     }
-  }, [admin])
+  }, [admin, sessionChecked])
 
   useEffect(() => {
     router.events.on("routeChangeStart", () => setProgress(77))

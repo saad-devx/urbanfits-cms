@@ -12,7 +12,7 @@ import { useFormik } from 'formik'
 
 export default function Login() {
     const router = useRouter()
-    const { isLoggedIn, signIn, adminLoading } = useSession();
+    const { isLoggedIn, signIn, adminLoading, admin } = useSession();
     const [showPass, setShowPass] = useState(false)
     const passRef = useRef()
 
@@ -33,7 +33,7 @@ export default function Login() {
         onSubmit: values => signIn(values, null, router)
     })
 
-    if (isLoggedIn()) return <AlertPage type="success" heading="You are signed in!" />
+    if (isLoggedIn() && admin) return <AlertPage type="success" heading="You are signed in!" />
     else return <>
         <Head><title>UF Admin Panel - Login</title></Head>
         <AuthPage loading={adminLoading} mblNav="/auth/signup" mblNavName="Register">

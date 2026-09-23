@@ -270,12 +270,16 @@ export default function ProductInfoPage(props) {
             ]
         },
         onSubmit: async (values, { resetForm }) => {
-            if (props.product && values._id && values._id.length > 10) {
-                setLoader(<Loader status="Updating the Product" progress={99} />)
-                await updateProduct(props.product._id, values)
-                return setLoader(null)
-            } else await CreateProduct(values)
-            resetForm()
+            try {
+                if (props.product && values._id && values._id.length > 10) {
+                    setLoader(<Loader status="Updating the Product" progress={99} />)
+                    await updateProduct(props.product._id, values)
+                    return setLoader(null)
+                } else await CreateProduct(values)
+                resetForm()
+            } catch (e) {
+                console.log('Error creating product: ', e)
+            }
         },
     })
 
@@ -313,7 +317,7 @@ export default function ProductInfoPage(props) {
                 </div>
             </div>
             <div>
-                <Link href="/products/allproducts">
+                <Link href="/products">
                     <Button my="my-0">View All</Button>
                 </Link>
             </div>
@@ -458,7 +462,7 @@ export default function ProductInfoPage(props) {
                                 <InputSelect
                                     classes="w-3/5"
                                     name={props.product ? `categories[${categoryIndex}]._id` : `categories[${categoryIndex}]`}
-                                    value={props.product ? (category && category._id) : category}
+                                    value={(props.product ? category?._id : category) || ''}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     error={errors.categories && errors.categories[categoryIndex] && touched.categories && touched.categories[categoryIndex] ?
@@ -466,7 +470,7 @@ export default function ProductInfoPage(props) {
                                     }>
                                     {[{ id: '', path: "Select Category" }, ...categories?.map((cat) => ({ id: cat._id, path: cat.path }))]?.map((obj, index) => {
                                         const { id, path } = obj
-                                        return <option key={index} value={id} selected={values.parent == id} disabled={index == 0}> {path} </option>
+                                        return <option key={index} value={id} disabled={index == 0}> {path} </option>
                                     })}
                                 </InputSelect>
                                 {categoryIndex > 0 && <button type="button" className="fa-solid fa-xmark mx-4 self-center" onClick={() => {

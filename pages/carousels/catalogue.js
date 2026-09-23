@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
 import useCarousel from '@/hooks/useCarousel';
@@ -9,6 +9,7 @@ import Loader from '@/components/loaders/loader';
 // imports for Schema and validation
 import { useFormik } from 'formik';
 import { catalogueCarouselSchema } from '@/mock/yupSchemas';
+import toaster from '@/utils/toast_function';
 
 const DefaultOrPic = ({ src, index, setFieldValue, mega }) => {
     const imgSrc = (() => {
@@ -28,6 +29,9 @@ const DefaultOrPic = ({ src, index, setFieldValue, mega }) => {
     </label>
 }
 
+// the stored slides carry _id and timestamps which must not be sent back on an update
+const toFormSlides = (carousel) => carousel.slides.map(({ title, image1, image2, href }) => ({ title, image1, image2, href: href || '' }))
+
 export default function ProductCategories() {
     const [loader, setLoader] = useState(null);
     const { getCatalogueCarousel, updateCatalogueCarousel } = useCarousel();
@@ -44,22 +48,19 @@ export default function ProductCategories() {
                 }
             ]
         },
-        onSubmit: async (values, { resetForm }) => {
+        onSubmit: async (values) => {
             setLoader(<Loader status="Preparing the uploading for the slide images..." progress={8} />)
-            const slides = structuredClone(values.slides);
-            console.log("So Here are the slides: :", slides)
+            const slides = values.slides.map(({ title, image1, image2, href }) => ({ title, image1, image2, href }));
             for (let [index, slide] of slides.entries()) {
-                setLoader(<Loader status={`Uploading Slide Image #${index}...`} progress={index / slides.length * 100} />)
-                slide.image1 = await uploadImage(slide.image1, `carousel-images/catalogue/${Date.now()}`, 100);
-                slide.image2 = await uploadImage(slide.image2, `carousel-images/catalogue/${Date.now()}`, 100);
-                console.log(slide)
+                setLoader(<Loader status={`Uploading Slide Image #${index + 1}...`} progress={index / slides.length * 100} />)
+                // an untouched image already holds its stored path, only a newly picked file is uploaded
+                if (typeof slide.image1 !== "string") slide.image1 = await uploadImage(slide.image1, `carousel-images/catalogue/${Date.now()}`, 100);
+                if (typeof slide.image2 !== "string") slide.image2 = await uploadImage(slide.image2, `carousel-images/catalogue/${Date.now()}`, 100);
+                if (!slide.image1 || !slide.image2) { setLoader(null); return toaster("error", `Slide #${index + 1} images couldn't be uploaded, please retry.`) }
             }
 
             setLoader(<Loader status="All slides images uploaded, updating carousel now.." progress={99} />)
-            await updateCatalogueCarousel(slides, (carousel) => {
-                console.log("Updated carousel: ", carousel)
-                // resetForm();
-            })
+            await updateCatalogueCarousel(slides, (carousel) => setValues({ slides: toFormSlides(carousel) }))
             setLoader(null)
         },
     })
@@ -76,6 +77,12 @@ export default function ProductCategories() {
         newSlideArray.splice(slideIndex, 1);
         setFieldValue("slides", newSlideArray);
     };
+
+    useEffect(() => {
+        getCatalogueCarousel((carouselData) => {
+            if (carouselData?.slides?.length) setValues({ slides: toFormSlides(carouselData) })
+        });
+    }, [])
 
     return <>
         {loader}

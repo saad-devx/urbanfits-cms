@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import toaster from "@/utils/toast_function";
 import axios from "axios";
 import useSession from "./useSession";
-const { admin } = useSession.getState()
 
 const useProduct = create((set, get) => ({
 
@@ -58,6 +57,7 @@ const useProduct = create((set, get) => ({
     },
 
     createProduct: async (productToCreate) => {
+        const { admin } = useSession.getState()
         if (!admin) return
 
         set(() => ({
@@ -75,6 +75,7 @@ const useProduct = create((set, get) => ({
     },
 
     updateProduct: async (id, updatedProduct) => {
+        const { admin } = useSession.getState()
         if (!admin) return
 
         set(() => ({ productLoading: true }))
@@ -94,6 +95,7 @@ const useProduct = create((set, get) => ({
     },
 
     deleteProducts: async (productsToDelete) => {
+        const { admin } = useSession.getState()
         if (!admin) return
 
         set(() => ({ productLoading: true }))
